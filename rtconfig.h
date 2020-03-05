@@ -237,6 +237,18 @@
 #define PKG_USING_SENSORS_DRIVERS
 #define PKG_USING_SHT3X
 #define PKG_USING_SHT3X_V100
+#define PKG_USING_U8G2
+
+/* U8G2 Examples */
+
+/* end of U8G2 Examples */
+#define PKG_USING_U8G2_C_LATEST_VERSION
+
+/* C   version: v1.x.x */
+
+/* C++ version: v2.x.x */
+
+#define PKG_U8G2_VER_NUM 0x19999
 /* end of peripheral libraries and drivers */
 
 /* miscellaneous packages */
