@@ -1,5 +1,10 @@
 [
  {
+  "path": "/packages/iot/pahomqtt", 
+  "ver": "v1.1.0", 
+  "name": "PAHOMQTT"
+ }, 
+ {
   "path": "/packages/iot/netutils", 
   "ver": "v1.1.0", 
   "name": "NETUTILS"

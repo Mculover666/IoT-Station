@@ -97,7 +97,6 @@ int mq2_collect(void)
    }
 
    return 0;
-
 }
 
 /* 导出到 msh 命令列表中 */
