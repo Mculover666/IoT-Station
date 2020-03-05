@@ -12,6 +12,8 @@
 #include <board.h>
 #include <rtdevice.h>
 
+#include <drv_soft_i2c.h>
+
 #define DBG_TAG "main"
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
@@ -20,6 +22,7 @@
 #define LED2_PIN    GET_PIN(B, 7)
 #define LED3_PIN    GET_PIN(B, 14)
 
+extern int sht30_collect(void);
 
 int main(void)
 {
@@ -28,6 +31,8 @@ int main(void)
     rt_pin_mode(LED1_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(LED2_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(LED3_PIN, PIN_MODE_OUTPUT);
+
+    sht30_collect();
 
     while (count++)
     {
@@ -41,3 +46,13 @@ int main(void)
 
     return RT_EOK;
 }
+
+int register_i2c(void)
+{
+    rt_hw_i2c_init("i2c1", GET_PIN(B,8), GET_PIN(B,9));
+
+    return RT_EOK;
+}
+//注册到系统中，自动初始化设备
+INIT_BOARD_EXPORT(register_i2c);
+
