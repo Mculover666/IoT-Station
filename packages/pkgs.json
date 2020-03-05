@@ -1,5 +1,10 @@
 [
  {
+  "path": "/packages/iot/at_device", 
+  "ver": "v2.0.1", 
+  "name": "AT_DEVICE"
+ }, 
+ {
   "path": "/packages/peripherals/sht3x", 
   "ver": "v1.0.0", 
   "name": "SHT3X"

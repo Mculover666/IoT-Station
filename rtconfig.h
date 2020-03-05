@@ -87,8 +87,11 @@
 
 #define RT_USING_DEVICE_IPC
 #define RT_PIPE_BUFSZ 512
+#define RT_USING_SYSTEM_WORKQUEUE
+#define RT_SYSTEM_WORKQUEUE_STACKSIZE 2048
+#define RT_SYSTEM_WORKQUEUE_PRIORITY 23
 #define RT_USING_SERIAL
-#define RT_SERIAL_RB_BUFSZ 64
+#define RT_SERIAL_RB_BUFSZ 128
 #define RT_USING_I2C
 #define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
@@ -102,17 +105,31 @@
 
 /* POSIX layer and C standard library */
 
-#define RT_LIBC_USING_TIME
+#define RT_USING_LIBC
 /* end of POSIX layer and C standard library */
 
 /* Network */
 
 /* Socket abstraction layer */
 
+#define RT_USING_SAL
+
+/* protocol stack implement */
+
+#define SAL_USING_AT
+/* end of protocol stack implement */
+#define SAL_SOCKETS_NUM 16
 /* end of Socket abstraction layer */
 
 /* Network interface device */
 
+#define RT_USING_NETDEV
+#define NETDEV_USING_IFCONFIG
+#define NETDEV_USING_PING
+#define NETDEV_USING_NETSTAT
+#define NETDEV_USING_AUTO_DEFAULT
+#define NETDEV_IPV4 1
+#define NETDEV_IPV6 0
 /* end of Network interface device */
 
 /* light weight TCP/IP stack */
@@ -121,6 +138,13 @@
 
 /* AT commands */
 
+#define RT_USING_AT
+#define AT_USING_CLIENT
+#define AT_CLIENT_NUM_MAX 1
+#define AT_USING_SOCKET
+#define AT_USING_CLI
+#define AT_CMD_MAX_LEN 128
+#define AT_SW_VERSION_NUM 0x10300
 /* end of AT commands */
 /* end of Network */
 
@@ -148,6 +172,15 @@
 
 /* end of Wiced WiFi */
 /* end of Wi-Fi */
+#define PKG_USING_AT_DEVICE
+#define AT_DEVICE_USING_ESP8266
+#define AT_DEVICE_ESP8266_SAMPLE
+#define ESP8266_SAMPLE_WIFI_SSID "FAST_88A6"
+#define ESP8266_SAMPLE_WIFI_PASSWORD "18324701020"
+#define ESP8266_SAMPLE_CLIENT_NAME "uart2"
+#define ESP8266_SAMPLE_RECV_BUFF_LEN 512
+#define PKG_USING_AT_DEVICE_V201
+#define PKG_AT_DEVICE_VER_NUM 0x20001
 
 /* IoT Cloud */
 
