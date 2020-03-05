@@ -39,7 +39,7 @@ static void sht30_collect_thread_entry(void *parameter)
             rt_kprintf("read sht3x fail.\r\n");
             break;
         }
-        rt_thread_mdelay(2000);
+        rt_thread_mdelay(5000);
     }
 }
 

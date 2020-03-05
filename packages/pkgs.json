@@ -1,0 +1,7 @@
+[
+ {
+  "path": "/packages/peripherals/sht3x", 
+  "ver": "v1.0.0", 
+  "name": "SHT3X"
+ }
+]
