@@ -86,19 +86,21 @@ void mqtt_emqx_entry(void *parameter)
     paho_mqtt_start(&client);
     is_started = 1;
 
-    while(1)
-    {
-        if (is_started == 0)
-        {
-           LOG_E("mqtt client is not connected.");
-           return;
-        }
-        else
-        {
-           paho_mqtt_publish(&client, QOS1, MQTT_PUBTOPIC, "hello emqx!");
-        }
-        rt_thread_mdelay(2000);
-    }
+    return;
+
+//    while(1)
+//    {
+//        if (is_started == 0)
+//        {
+//           LOG_E("mqtt client is not connected.");
+//           return;
+//        }
+//        else
+//        {
+//           paho_mqtt_publish(&client, QOS1, MQTT_PUBTOPIC, "hello emqx!");
+//        }
+//        rt_thread_mdelay(2000);
+//    }
 }
 
 /* 创建线程 */
