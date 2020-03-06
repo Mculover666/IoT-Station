@@ -18,6 +18,8 @@
 #include <arpa/inet.h>         /* 包含 ip_addr_t 等地址相关的头文件 */
 #include <netdev.h>            /* 包含全部的 netdev 相关操作接口函数 */
 #include <ntp.h>
+#include <sht3x.h>
+#include "paho_mqtt.h"
 
 #define DBG_TAG "main"
 #define DBG_LVL DBG_LOG
@@ -34,10 +36,22 @@ extern int sht30_collect(void);
 extern int mqtt_emqx(void);
 
 u8g2_t u8g2;
+extern rt_sem_t dynamic_sem_sht30;
+int temperature_d;
+int temperature_f;
+int humidity_d;
+int humidity_f;
+
+extern MQTTClient client;
+extern int is_started;
 
 int main(void)
 {
     int count;
+    char temp_str[5] = {0};
+    char humi_str[5] = {0};
+
+
     /* set LED pin mode to output */
     rt_pin_mode(LED1_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(LED2_PIN, PIN_MODE_OUTPUT);
@@ -65,6 +79,13 @@ int main(void)
     u8g2_DrawStr(&u8g2, 1, 36, "SSID: ABCDEF");
     u8g2_DrawStr(&u8g2, 1, 48, "Connecting...");
     u8g2_SendBuffer(&u8g2);
+
+    //初始化传感器
+    sht3x_device_t  sht3x_device;
+
+    sht3x_device = sht3x_init("i2c1", 0x44);
+
+    sht3x_softreset(sht3x_device);
 
     //获取网卡对象
     struct netdev* net = netdev_get_by_name("esp0");
@@ -98,10 +119,9 @@ int main(void)
     u8g2_DrawStr(&u8g2, 1, 12, "time:");
     u8g2_DrawStr(&u8g2, 1, 24, "tempeture:");
     u8g2_DrawStr(&u8g2, 1, 36, "humidity:");
-    u8g2_DrawStr(&u8g2, 1, 48, "air:");
+    u8g2_DrawStr(&u8g2, 1, 48, "lightness:");
+    u8g2_DrawStr(&u8g2, 1, 60, "air:");
     u8g2_SendBuffer(&u8g2);
-
-   // sht30_collect();
 
     //绿色LED闪烁，表示连接MQTT服务器正常，已就绪
     char timestr[6];
@@ -123,6 +143,48 @@ int main(void)
         u8g2_SetFont(&u8g2, u8g2_font_ncenB08_tr);
         u8g2_DrawStr(&u8g2, 70, 12, timestr);
         u8g2_SendBuffer(&u8g2);
+
+        //更新传感器温度值和湿度值
+        sht3x_softreset(sht3x_device);
+        if(RT_EOK == sht3x_read_singleshot(sht3x_device))
+        {
+            //rt_kprintf("sht30 humidity   : %d.%d  ", (int)sht3x_device->humidity, (int)(sht3x_device->humidity * 10) % 10);
+            //rt_kprintf("temperature: %d.%d\n", (int)sht3x_device->temperature, (int)(sht3x_device->temperature * 10) % 10);
+            //获取数据
+            temperature_d = (int)sht3x_device->temperature;
+            temperature_f = (int)(sht3x_device->temperature * 10) % 10;
+            humidity_d = (int)sht3x_device->humidity;
+            humidity_f = (int)(sht3x_device->humidity * 10) % 10;
+            //显示
+            sprintf(temp_str, "%2d.%1d", temperature_d, temperature_f);
+            sprintf(humi_str, "%2d.%1d", humidity_d, humidity_f);
+            u8g2_SetFont(&u8g2, u8g2_font_ncenB08_tr);
+            u8g2_DrawStr(&u8g2, 70, 24, temp_str);
+            u8g2_DrawStr(&u8g2, 70, 36, humi_str);
+            u8g2_SendBuffer(&u8g2);
+        }
+        else
+        {
+            rt_kprintf("read sht3x fail.\r\n");
+
+        }
+        //上报
+       if (is_started == 0)
+       {
+         LOG_E("mqtt client is not connected.");
+       }
+       else
+       {
+         paho_mqtt_publish(&client, QOS1, "temp", temp_str);
+         rt_thread_mdelay(200);
+         paho_mqtt_publish(&client, QOS1, "humi", humi_str);
+         LOG_I("temp and humi report success.");
+       }
+        //更新光照值
+
+        //更新亮度值
+
+        //更新空气值
 
         rt_thread_mdelay(5000);
     }

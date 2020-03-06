@@ -29,8 +29,8 @@
 #define MQTT_PUBTOPIC           "pub_test"
 #define MQTT_WILLMSG            "Goodbye!"
 
-static MQTTClient client;
-static int is_started = 0;
+MQTTClient client;
+int is_started = 0;
 
 static void mqtt_sub_callback(MQTTClient *c, MessageData *msg_data)
 {
